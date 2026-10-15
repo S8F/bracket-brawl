@@ -1,0 +1,90 @@
+{
+  "about": "The one finished tournament in the old web app's data/db/store.json, with the 14 real names replaced by Player 1..14. Only what a replay needs: who sat where in round 1, the winner of every played match, and the stored champion and 14-place standings.",
+  "config": {
+    "groupFormat": {
+      "kind": "bestOf",
+      "n": 3
+    },
+    "playoffFormat": {
+      "kind": "bestOf",
+      "n": 3
+    },
+    "grandFinalFormat": {
+      "kind": "bestOf",
+      "n": 5
+    },
+    "skipGroups": true
+  },
+  "players": {
+    "0v9sk56": "Player 1",
+    "10pzn8b": "Player 2",
+    "1t2mu0g": "Player 3",
+    "33vg7fj": "Player 4",
+    "6gihcz9": "Player 5",
+    "80e7sbr": "Player 6",
+    "9nzw42p": "Player 7",
+    "cgp22hr": "Player 8",
+    "ha2bxy6": "Player 9",
+    "jsw2m4a": "Player 10",
+    "my8t7jh": "Player 11",
+    "otmupfr": "Player 12",
+    "unx0lun": "Player 13",
+    "z5vgwj1": "Player 14"
+  },
+  "round1": [
+    ["33vg7fj", null],
+    ["0v9sk56", "ha2bxy6"],
+    ["1t2mu0g", "10pzn8b"],
+    ["unx0lun", "z5vgwj1"],
+    ["my8t7jh", null],
+    ["6gihcz9", "80e7sbr"],
+    ["cgp22hr", "otmupfr"],
+    ["9nzw42p", "jsw2m4a"]
+  ],
+  "winners": {
+    "po-wb-r1-m2": "0v9sk56",
+    "po-wb-r1-m3": "10pzn8b",
+    "po-wb-r1-m4": "unx0lun",
+    "po-wb-r1-m6": "6gihcz9",
+    "po-wb-r1-m7": "cgp22hr",
+    "po-wb-r1-m8": "9nzw42p",
+    "po-wb-r2-m1": "33vg7fj",
+    "po-wb-r2-m2": "10pzn8b",
+    "po-wb-r2-m3": "my8t7jh",
+    "po-wb-r2-m4": "9nzw42p",
+    "po-wb-r3-m1": "33vg7fj",
+    "po-wb-r3-m2": "my8t7jh",
+    "po-wb-r4-m1": "33vg7fj",
+    "po-lb-r1-m2": "1t2mu0g",
+    "po-lb-r1-m4": "otmupfr",
+    "po-lb-r2-m1": "ha2bxy6",
+    "po-lb-r2-m2": "1t2mu0g",
+    "po-lb-r2-m3": "80e7sbr",
+    "po-lb-r2-m4": "otmupfr",
+    "po-lb-r3-m1": "ha2bxy6",
+    "po-lb-r3-m2": "otmupfr",
+    "po-lb-r4-m1": "10pzn8b",
+    "po-lb-r4-m2": "otmupfr",
+    "po-lb-r5-m1": "10pzn8b",
+    "po-lb-r6-m1": "10pzn8b",
+    "po-gf": "10pzn8b",
+    "po-gf-reset": "10pzn8b"
+  },
+  "storedChampion": "10pzn8b",
+  "storedStandings": [
+    "10pzn8b",
+    "33vg7fj",
+    "my8t7jh",
+    "otmupfr",
+    "ha2bxy6",
+    "9nzw42p",
+    "1t2mu0g",
+    "80e7sbr",
+    "0v9sk56",
+    "unx0lun",
+    "6gihcz9",
+    "cgp22hr",
+    "z5vgwj1",
+    "jsw2m4a"
+  ]
+}

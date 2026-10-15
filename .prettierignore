@@ -1,0 +1,14 @@
+node_modules
+.expo
+dist
+package-lock.json
+# Bracket maths copied unchanged from the old web app (spec: "reused unchanged"). Kept as the web app
+# had it, so `diff` against the old web app's src/lib proves nothing was altered (five files identical; tournament.ts differs only in two comment lines that named the old product).
+src/lib/types.ts
+src/lib/doubleElim.ts
+src/lib/engine.ts
+src/lib/tournament.ts
+src/lib/players.ts
+src/lib/roundNames.ts
+# Written and re-written by the Expo tools in their own layout.
+tsconfig.json
