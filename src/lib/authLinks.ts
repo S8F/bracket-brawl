@@ -17,12 +17,56 @@ export function pickRedirectUrl(isExpoGo: boolean, devUrl: string): string {
   return isExpoGo ? devUrl : APP_REDIRECT_URL;
 }
 
+// What the phone tells us about where the app is running.
+export type RunSignals = {
+  executionEnvironment: string | undefined;
+  appOwnership: string | null | undefined;
+  linkingUri: string | null | undefined;
+  createdUrl: string;
+};
+
+const EXP_SCHEME = /^exps?:\/\//i;
+
+// True when the app runs inside Expo Go. Any one of several signals is enough, so a change in one of them
+// cannot silently send people to bracketbrawl://, which Expo Go cannot open.
+// Do NOT add Constants.expoGoConfig: in a built app it returns the embedded manifest (truthy), so it is not Expo Go only.
+// In a built app the remaining signals are all false: environment is "bare"/"standalone", appOwnership is null,
+// linkingUri is not provided by the native module, and the created address starts with bracketbrawl://.
+export function detectExpoGo(s: RunSignals): boolean {
+  return (
+    s.executionEnvironment === ExecutionEnvironment.StoreClient ||
+    s.appOwnership === 'expo' ||
+    EXP_SCHEME.test(s.createdUrl) ||
+    EXP_SCHEME.test(s.linkingUri ?? '')
+  );
+}
+
 // Used by sign-up and forgot-password. In dev it prints the address so it can be checked against Supabase's list.
 export function authRedirectUrl(): string {
-  const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-  const url = pickRedirectUrl(isExpoGo, Linking.createURL('auth-callback'));
-  if (__DEV__) console.log(`[auth] email links will redirect to: ${url}`);
+  const createdUrl = Linking.createURL('auth-callback');
+  const signals: RunSignals = {
+    executionEnvironment: Constants.executionEnvironment,
+    appOwnership: Constants.appOwnership,
+    linkingUri: Constants.linkingUri,
+    createdUrl,
+  };
+  const isExpoGo = detectExpoGo(signals);
+  // Expo Go needs an exp:// address. If it somehow came out as bracketbrawl://, build one from the running link.
+  const devUrl = EXP_SCHEME.test(createdUrl)
+    ? createdUrl
+    : (expoGoFallbackUrl(signals.linkingUri) ?? createdUrl);
+  const url = pickRedirectUrl(isExpoGo, devUrl);
+  if (__DEV__) {
+    console.log(`[auth] email links will redirect to: ${url}`);
+    console.log(`[auth] detection signals: ${JSON.stringify(signals)}`);
+  }
   return url;
+}
+
+// Constants.linkingUri looks like exp://192.168.1.5:8081/--/ in Expo Go; add the path to it.
+export function expoGoFallbackUrl(linkingUri: string | null | undefined): string | null {
+  if (!linkingUri || !EXP_SCHEME.test(linkingUri)) return null;
+  return `${linkingUri.replace(/\/+$/, '').replace(/\/--$/, '')}/--/auth-callback`;
 }
 
 // Pulls "key=value" pairs from both the ?query and the #fragment parts of the link.

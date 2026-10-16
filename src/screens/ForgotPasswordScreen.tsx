@@ -1,6 +1,7 @@
 // Asks for an email address and sends a password-reset link to it.
 
 import { useState } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { requestPasswordReset } from '../auth/authService';
 import { AppButton } from '../components/AppButton';
@@ -14,6 +15,7 @@ import { authRedirectUrl } from '../lib/authLinks';
 import { getClient } from '../lib/supabase';
 import { validateEmail } from '../lib/validation';
 import type { SignedOutStackParams } from '../navigation/types';
+import { colors, fonts } from '../theme';
 
 export function ForgotPasswordScreen({
   navigation,
@@ -58,8 +60,21 @@ export function ForgotPasswordScreen({
         kind="info"
         message={sent ? 'If that email has an account, a reset link is on its way.' : null}
       />
+      {sent ? (
+        <Text style={styles.spamHint}>{"Didn't get it? Check your spam folder."}</Text>
+      ) : null}
       <AppButton label="Send reset link" onPress={submit} busy={busy} />
       <TextLink label="Back to log in" onPress={() => navigation.navigate('Login')} />
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  spamHint: {
+    fontFamily: fonts.body,
+    color: colors.textMuted,
+    fontSize: 16,
+    lineHeight: 22,
+    textDecorationLine: 'underline',
+  },
+});
