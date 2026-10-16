@@ -5,6 +5,7 @@ import { AppButton } from '../components/AppButton';
 import { BodyText } from '../components/BodyText';
 import { Heading } from '../components/Heading';
 import { Screen } from '../components/Screen';
+import { SpamHint } from '../components/SpamHint';
 import type { SignedOutStackParams } from '../navigation/types';
 
 export function CheckEmailScreen({
@@ -17,6 +18,7 @@ export function CheckEmailScreen({
       <BodyText>
         {`We sent a link to ${route.params.email}. Tap the link to confirm your account, then log in. Look in spam if you do not see it.`}
       </BodyText>
+      <SpamHint />
       <AppButton label="Go to log in" onPress={() => navigation.navigate('Login')} />
     </Screen>
   );
