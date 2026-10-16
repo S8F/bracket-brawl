@@ -42,4 +42,4 @@ The tests use a fake Supabase, so they need no `.env` and no network.
 
 ## Licence
 
-No licence has been chosen yet. Until one is added, all rights are reserved.
+Copyright (c) 2026 Saief Al-faour. All rights reserved. See [LICENSE](LICENSE).

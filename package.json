@@ -45,6 +45,7 @@
     "test": "jest"
   },
   "private": true,
+  "license": "UNLICENSED",
   "jest": {
     "preset": "jest-expo",
     "testMatch": [
