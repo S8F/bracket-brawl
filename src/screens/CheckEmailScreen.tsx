@@ -16,7 +16,7 @@ export function CheckEmailScreen({
     <Screen>
       <Heading>Check your email</Heading>
       <BodyText>
-        {`We sent a link to ${route.params.email}. Tap the link to confirm your account, then log in. Look in spam if you do not see it.`}
+        {`We sent a link to ${route.params.email}. Tap the link to confirm your account, then log in.`}
       </BodyText>
       <SpamHint />
       <AppButton label="Go to log in" onPress={() => navigation.navigate('Login')} />
