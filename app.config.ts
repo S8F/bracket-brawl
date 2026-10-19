@@ -14,6 +14,10 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: false, // iPhone only: iPad support is switched off
     bundleIdentifier: 'com.saief.bracketbrawl',
+    infoPlist: {
+      // Only standard Apple encryption (web connections) is used: no yearly US export report needed.
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   extra: {
     supabaseUrl: process.env.SUPABASE_URL ?? '',

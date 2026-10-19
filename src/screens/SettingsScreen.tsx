@@ -1,6 +1,7 @@
 // Account settings: shows who is logged in, log out, and the way to delete the account.
 
 import { useState } from 'react';
+import * as Linking from 'expo-linking';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { signOut } from '../auth/authService';
 import { useAuth } from '../auth/AuthContext';
@@ -11,6 +12,8 @@ import { Screen } from '../components/Screen';
 import { StatusMessage } from '../components/StatusMessage';
 import { getClient } from '../lib/supabase';
 import type { SignedInStackParams } from '../navigation/types';
+
+const PRIVACY_POLICY_URL = 'https://s8f.github.io/bracket-brawl-privacy/';
 
 export function SettingsScreen({
   navigation,
@@ -33,6 +36,12 @@ export function SettingsScreen({
       <BodyText>{`Logged in as ${session?.user.email ?? 'unknown'}`}</BodyText>
       <StatusMessage message={error} />
       <AppButton label="Log out" variant="secondary" onPress={logOut} busy={busy} />
+      <AppButton
+        label="Privacy Policy"
+        variant="secondary"
+        onPress={() => void Linking.openURL(PRIVACY_POLICY_URL)}
+        hint="Opens the privacy policy in your web browser"
+      />
       <AppButton
         label="Delete my account"
         variant="danger"
