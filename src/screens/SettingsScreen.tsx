@@ -10,10 +10,9 @@ import { BodyText } from '../components/BodyText';
 import { Heading } from '../components/Heading';
 import { Screen } from '../components/Screen';
 import { StatusMessage } from '../components/StatusMessage';
+import { PRIVACY_POLICY_URL } from '../lib/privacyPolicy';
 import { getClient } from '../lib/supabase';
 import type { SignedInStackParams } from '../navigation/types';
-
-const PRIVACY_POLICY_URL = 'https://s8f.github.io/bracket-brawl-privacy/';
 
 export function SettingsScreen({
   navigation,

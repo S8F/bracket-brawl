@@ -1,6 +1,7 @@
 // Login with email + password. Links to sign-up and forgot-password. Shows a message if an email link failed.
 
 import { useState } from 'react';
+import * as Linking from 'expo-linking';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { signIn } from '../auth/authService';
 import { useAuth } from '../auth/AuthContext';
@@ -11,6 +12,7 @@ import { Screen } from '../components/Screen';
 import { StatusMessage } from '../components/StatusMessage';
 import { TextField } from '../components/TextField';
 import { TextLink } from '../components/TextLink';
+import { PRIVACY_POLICY_URL } from '../lib/privacyPolicy';
 import { getClient } from '../lib/supabase';
 import { validateEmail } from '../lib/validation';
 import type { SignedOutStackParams } from '../navigation/types';
@@ -70,6 +72,12 @@ export function LoginScreen({ navigation }: NativeStackScreenProps<SignedOutStac
       <AppButton label="Log in" onPress={submit} busy={busy} />
       <TextLink label="Forgot password?" onPress={() => navigation.navigate('ForgotPassword')} />
       <TextLink label="Create an account" onPress={() => navigation.navigate('SignUp')} />
+      <AppButton
+        label="Privacy Policy"
+        variant="secondary"
+        onPress={() => void Linking.openURL(PRIVACY_POLICY_URL)}
+        hint="Opens the privacy policy in your web browser"
+      />
     </Screen>
   );
 }
