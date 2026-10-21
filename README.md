@@ -40,6 +40,18 @@ npm run format:check
 
 The tests use a fake Supabase, so they need no `.env` and no network.
 
+## Answering a "send me my data" email
+
+1. Note the date the email arrived. The reply is due within one month.
+2. Only answer to the account's own email address. If the request comes from another address, ask the person to write from the account's address.
+3. Supabase dashboard → the real project → SQL editor. Find the account: `select id, email, created_at from auth.users where lower(email) = lower('<email>');`
+4. No row: reply that no account uses that email, so you hold no app data for it. Login events and request logs are deleted after 1 hour and 1 day.
+5. One row: pull everything in one go, using that `id`:
+   `select json_build_object('account', (select json_build_object('email', email, 'created_at', created_at) from auth.users where id = '<id>'), 'players', (select coalesce(json_agg(p), '[]') from public.players p where p.user_id = '<id>'), 'tournaments', (select coalesce(json_agg(t), '[]') from public.tournaments t where t.user_id = '<id>'));`
+6. Save the result as `brawl-data-<date>.json`. Check the player and tournament counts match `select count(*) from public.players where user_id = '<id>';` and the same for tournaments.
+7. Reply to the same address with the file attached, within one month of step 1.
+8. Delete the file from the Mac and from Downloads. We keep no copies (AC28). The sent email is the only record.
+
 ## Licence
 
 Copyright (c) 2026 Saief Al-faour. All rights reserved. See [LICENSE](LICENSE).
