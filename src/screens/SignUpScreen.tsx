@@ -1,6 +1,7 @@
 // Create an account with email + password. After sending, the user is told to confirm via the email link.
 
 import { useState } from 'react';
+import * as Linking from 'expo-linking';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { signUp } from '../auth/authService';
 import { AppButton } from '../components/AppButton';
@@ -11,6 +12,7 @@ import { StatusMessage } from '../components/StatusMessage';
 import { TextField } from '../components/TextField';
 import { TextLink } from '../components/TextLink';
 import { authRedirectUrl } from '../lib/authLinks';
+import { PRIVACY_POLICY_URL } from '../lib/privacyPolicy';
 import { getClient } from '../lib/supabase';
 import {
   MIN_PASSWORD_LENGTH,
@@ -95,6 +97,12 @@ export function SignUpScreen({
       <StatusMessage message={formError} />
       <AppButton label="Create account" onPress={submit} busy={busy} />
       <TextLink label="I already have an account" onPress={() => navigation.navigate('Login')} />
+      <AppButton
+        label="Privacy Policy"
+        variant="secondary"
+        onPress={() => void Linking.openURL(PRIVACY_POLICY_URL)}
+        hint="Opens the privacy policy in your web browser"
+      />
     </Screen>
   );
 }

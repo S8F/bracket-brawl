@@ -1,4 +1,4 @@
-// Checks that the "Privacy Policy" button on the login screen and on the settings screen each
+// Checks that the "Privacy Policy" button on the login, sign-up and settings screens each
 // open exactly the real privacy policy address in the phone's web browser.
 
 import type { ComponentProps, ReactElement } from 'react';
@@ -6,6 +6,7 @@ import * as Linking from 'expo-linking';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { AuthContext, type AuthState } from '../src/auth/AuthContext';
 import { LoginScreen } from '../src/screens/LoginScreen';
+import { SignUpScreen } from '../src/screens/SignUpScreen';
 import { SettingsScreen } from '../src/screens/SettingsScreen';
 import { fakeNavigation, screenProps } from './helpers/screenSetup';
 
@@ -50,6 +51,19 @@ describe('privacy policy buttons', () => {
     await pressPrivacyPolicy(
       <SettingsScreen
         {...screenProps<ComponentProps<typeof SettingsScreen>>({
+          navigation: fakeNavigation(),
+          route: {},
+        })}
+      />,
+    );
+    expect(Linking.openURL).toHaveBeenCalledTimes(1);
+    expect(Linking.openURL).toHaveBeenCalledWith(EXPECTED_URL);
+  });
+
+  it('sign-up screen opens the privacy policy address', async () => {
+    await pressPrivacyPolicy(
+      <SignUpScreen
+        {...screenProps<ComponentProps<typeof SignUpScreen>>({
           navigation: fakeNavigation(),
           route: {},
         })}
