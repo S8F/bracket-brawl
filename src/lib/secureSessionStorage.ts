@@ -35,8 +35,12 @@ export class LargeSecureStore {
     const encryptionKey = Crypto.getRandomBytes(32); // 256-bit key, new on every save
     const cipher = new aesjs.ModeOfOperation.ctr(encryptionKey, new aesjs.Counter(1));
     const encrypted = aesjs.utils.hex.fromBytes(cipher.encrypt(aesjs.utils.utf8.toBytes(value)));
-    // Ciphertext first, key second: a crash in between leaves an unreadable session (read as
-    // logged out), never a mismatched one.
+    // Ciphertext first, key second. The two writes are not atomic, and this does not make a crash
+    // between them safe. If the app dies in between, AsyncStorage holds the new ciphertext while the
+    // Keychain holds the previous key (or none on a first save). With no key, getItem deletes the
+    // ciphertext and returns null. With the old key, AES-CTR has no integrity check, so decrypting
+    // returns garbage text, not null; the caller's JSON parse is what rejects it. A failed first
+    // write throws before the key is touched.
     await AsyncStorage.setItem(key, encrypted);
     await SecureStore.setItemAsync(key, aesjs.utils.hex.fromBytes(encryptionKey));
   }
