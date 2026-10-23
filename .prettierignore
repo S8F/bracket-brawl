@@ -12,3 +12,4 @@ src/lib/players.ts
 src/lib/roundNames.ts
 # Written and re-written by the Expo tools in their own layout.
 tsconfig.json
+supabase/.temp/

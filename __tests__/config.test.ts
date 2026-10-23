@@ -12,6 +12,13 @@ describe('readSupabaseConfig', () => {
         supabasePublishableKey: 'YOUR-PUBLISHABLE-KEY',
       }),
     ).toBeNull());
+  it('returns null when the address does not start with https', () =>
+    expect(
+      readSupabaseConfig({
+        supabaseUrl: 'http://abc.supabase.co',
+        supabasePublishableKey: 'sb_publishable_x',
+      }),
+    ).toBeNull());
   it('returns the values when filled in', () =>
     expect(
       readSupabaseConfig({

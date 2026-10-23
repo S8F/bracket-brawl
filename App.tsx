@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from './src/auth/AuthProvider';
+import { TestLabel } from './src/components/TestLabel';
 import { RootNavigator } from './src/navigation/RootNavigator';
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
     <SafeAreaProvider>
       <AuthProvider>
         <RootNavigator />
+        <TestLabel />
         <StatusBar style="light" />
       </AuthProvider>
     </SafeAreaProvider>

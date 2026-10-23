@@ -55,11 +55,11 @@ After a database change, run `supabase/tests/brawl17_default_grants_check.sql` (
 
 The real Supabase project (`tuoqpcgdvoiruwtfymjk`) has no migration history table, so nothing records which migrations were applied. Do not run `supabase db push` blindly: it cannot tell what is already there. Check this list first, and add a row whenever a migration is applied.
 
-| Migration file | Date applied | How applied |
-|---|---|---|
-| `20261022000001_tighten_table_grants.sql` | 2026-10-22 (per the BRAWL-8 close log) | Unknown (not recorded; likely a plain SQL run) |
-| `20261023000002_revoke_public_execute_default.sql` (run first) | 2026-10-23 | `supabase db query --linked -f` |
-| `20261023000001_revoke_anon_default_privileges.sql` (run second) | 2026-10-23 | `supabase db query --linked -f` |
+| Migration file                                                   | Date applied                           | How applied                                    |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------------------------------------------- |
+| `20261022000001_tighten_table_grants.sql`                        | 2026-10-22 (per the BRAWL-8 close log) | Unknown (not recorded; likely a plain SQL run) |
+| `20261023000002_revoke_public_execute_default.sql` (run first)   | 2026-10-23                             | `supabase db query --linked -f`                |
+| `20261023000001_revoke_anon_default_privileges.sql` (run second) | 2026-10-23                             | `supabase db query --linked -f`                |
 
 ## Answering a "send me my data" email
 

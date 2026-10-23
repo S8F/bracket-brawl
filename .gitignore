@@ -45,3 +45,6 @@ yarn-error.*
 
 # the committed template must not be ignored by the repo-root ".env.*" rule
 !.env.example
+
+# Supabase command-line local link info (not for git)
+supabase/.temp/
