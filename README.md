@@ -40,6 +40,17 @@ npm run format:check
 
 The tests use a fake Supabase, so they need no `.env` and no network.
 
+## Database functions (house rule)
+
+New functions made by the `postgres` role no longer come callable by everyone (see migration `20261023000002`). So every migration that creates a function must:
+
+1. End with `revoke execute on function <name>(<args>) from public, anon;`
+2. Then `grant execute on function <name>(<args>) to <roles that call it>;` (usually `authenticated`, plus `service_role` if the server calls it).
+3. An RLS helper function that lives outside `public` must grant execute to `authenticated`, or the policies using it will fail.
+4. Never put app functions in the `storage` schema. That schema is owned by the platform and its defaults still give `anon` access.
+
+After a database change, run `supabase/tests/brawl17_default_grants_check.sql` (read-only) and compare with its pass rules.
+
 ## Answering a "send me my data" email
 
 1. Note the date the email arrived. The reply is due within one month.
