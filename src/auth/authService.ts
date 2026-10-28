@@ -2,14 +2,32 @@
 // Every function returns { ok: true } or { ok: false, message } with a message safe to show on screen.
 
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { friendlyAuthError } from '../lib/authErrors';
+import { friendlyAuthError, isServerOutage } from '../lib/authErrors';
 
-export type AuthResult = { ok: true } | { ok: false; message: string };
+// mayHaveAccount is set only on sign-up server errors that could leave a half-made account.
+export type AuthResult = { ok: true } | { ok: false; message: string; mayHaveAccount?: true };
 
 const OK: AuthResult = { ok: true };
 
-function fail(error: { code?: string; message?: string }): AuthResult {
-  return { ok: false, message: friendlyAuthError(error) };
+function fail(
+  error: {
+    code?: string;
+    message?: string;
+    status?: number;
+    name?: string;
+  },
+  context?: 'signup',
+): AuthResult {
+  return { ok: false, message: friendlyAuthError(error, context) };
+}
+
+function signUpFail(error: Parameters<typeof fail>[0]): AuthResult {
+  const result = fail(error, 'signup');
+  const half =
+    error.code === 'unexpected_failure' ||
+    error.code === 'error_sending_confirmation_email' ||
+    isServerOutage(error);
+  return half && !result.ok ? { ...result, mayHaveAccount: true } : result;
 }
 
 export async function signIn(
@@ -33,7 +51,38 @@ export async function signUp(
     password,
     options: { emailRedirectTo: redirectTo },
   });
-  return error ? fail(error) : OK;
+  if (error) {
+    // Real cause for TestFlight / Xcode logs. No password, no keys.
+    console.warn('signUp failed', {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+    return signUpFail(error);
+  }
+  return OK;
+}
+
+// Sends the confirmation email again for an account that was created but never confirmed.
+export async function resendConfirmation(
+  client: SupabaseClient,
+  email: string,
+  redirectTo: string,
+): Promise<AuthResult> {
+  const { error } = await client.auth.resend({
+    type: 'signup',
+    email: email.trim(),
+    options: { emailRedirectTo: redirectTo },
+  });
+  if (error) {
+    console.warn('resend failed', {
+      code: error.code,
+      status: error.status,
+      message: error.message,
+    });
+    return signUpFail(error);
+  }
+  return OK;
 }
 
 export async function requestPasswordReset(

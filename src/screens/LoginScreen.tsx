@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import * as Linking from 'expo-linking';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { signIn } from '../auth/authService';
+import { resendConfirmation, signIn } from '../auth/authService';
 import { useAuth } from '../auth/AuthContext';
 import { AppButton } from '../components/AppButton';
 import { BodyText } from '../components/BodyText';
@@ -12,6 +12,8 @@ import { Screen } from '../components/Screen';
 import { StatusMessage } from '../components/StatusMessage';
 import { TextField } from '../components/TextField';
 import { TextLink } from '../components/TextLink';
+import { authRedirectUrl } from '../lib/authLinks';
+import { friendlyAuthError } from '../lib/authErrors';
 import { PRIVACY_POLICY_URL } from '../lib/privacyPolicy';
 import { getClient } from '../lib/supabase';
 import { validateEmail } from '../lib/validation';
@@ -39,6 +41,13 @@ export function LoginScreen({ navigation }: NativeStackScreenProps<SignedOutStac
     setBusy(false);
     // On success the login state changes and the app moves to the home screen by itself.
     if (!result.ok) setFormError(result.message);
+  };
+
+  const resend = async () => {
+    setBusy(true);
+    const result = await resendConfirmation(getClient(), email, authRedirectUrl());
+    setBusy(false);
+    setFormError(result.ok ? 'Confirmation email sent. Check your inbox.' : result.message);
   };
 
   return (
@@ -69,6 +78,9 @@ export function LoginScreen({ navigation }: NativeStackScreenProps<SignedOutStac
         onSubmitEditing={submit}
       />
       <StatusMessage message={formError} />
+      {formError === friendlyAuthError({ code: 'email_not_confirmed' }) ? (
+        <TextLink label="Resend confirmation email" onPress={resend} />
+      ) : null}
       <AppButton label="Log in" onPress={submit} busy={busy} />
       <TextLink label="Forgot password?" onPress={() => navigation.navigate('ForgotPassword')} />
       <TextLink label="Create an account" onPress={() => navigation.navigate('SignUp')} />

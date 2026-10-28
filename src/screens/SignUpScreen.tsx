@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import * as Linking from 'expo-linking';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { signUp } from '../auth/authService';
+import { resendConfirmation, signUp } from '../auth/authService';
 import { AppButton } from '../components/AppButton';
 import { BodyText } from '../components/BodyText';
 import { Heading } from '../components/Heading';
@@ -35,9 +35,11 @@ export function SignUpScreen({
   }>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [canResend, setCanResend] = useState(false);
 
   const submit = async () => {
     setFormError(null);
+    setCanResend(false);
     const next = {
       email: validateEmail(email),
       password: validatePassword(password),
@@ -51,9 +53,18 @@ export function SignUpScreen({
     setBusy(false);
     if (!result.ok) {
       setFormError(result.message);
+      setCanResend(result.mayHaveAccount === true);
       return;
     }
     navigation.replace('CheckEmail', { email: email.trim() });
+  };
+
+  const resend = async () => {
+    setBusy(true);
+    const result = await resendConfirmation(getClient(), email, authRedirectUrl());
+    setBusy(false);
+    setFormError(result.ok ? 'Confirmation email sent. Check your inbox.' : result.message);
+    setCanResend(!result.ok && result.mayHaveAccount === true);
   };
 
   return (
@@ -95,6 +106,9 @@ export function SignUpScreen({
         onSubmitEditing={submit}
       />
       <StatusMessage message={formError} />
+      {canResend && formError && email.trim() !== '' ? (
+        <TextLink label="Resend confirmation email" onPress={resend} />
+      ) : null}
       <AppButton label="Create account" onPress={submit} busy={busy} />
       <TextLink label="I already have an account" onPress={() => navigation.navigate('Login')} />
       <AppButton
