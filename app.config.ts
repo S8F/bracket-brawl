@@ -33,6 +33,7 @@ const config: ExpoConfig = {
   extra: {
     supabaseUrl: process.env.SUPABASE_URL ?? '',
     supabasePublishableKey: process.env.SUPABASE_PUBLISHABLE_KEY ?? '',
+    eas: { projectId: '1af561cd-b1a0-4af7-ab4b-5d2b8b26219f' }, // Expo project (account s8fii)
   },
 };
 
